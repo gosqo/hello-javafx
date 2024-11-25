@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-
+<?import javafx.scene.layout.VBox?>
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.gosqo.hellojavafx.HelloController">
     <padding>
@@ -19,4 +19,7 @@
 
     <!-- 서버 활성화 버튼 추가 -->
     <Button text="Start WebSocket Server" onAction="#onStartServerButtonClick"/>
+
+    <!-- 클라이언트로부터 받은 메시지를 출력할 새 Label 추가 -->
+    <TextArea fx:id="messageArea" editable="false" wrapText="true" prefRowCount="11" prefColumnCount="30"/>
 </VBox>

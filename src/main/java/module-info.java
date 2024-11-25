@@ -8,6 +8,16 @@ module org.gosqo.hellojavafx {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
 
+    requires org.glassfish.tyrus.client;
+    requires org.glassfish.tyrus.server;
+    requires org.glassfish.tyrus.core;
+    requires org.glassfish.tyrus.spi;
+
+    requires org.glassfish.tyrus.container.grizzly.server;
+    requires org.glassfish.tyrus.container.grizzly.client;
+
+
+
     opens org.gosqo.hellojavafx to javafx.fxml;
     exports org.gosqo.hellojavafx;
 }
