@@ -12,9 +12,18 @@ public class HelloController {
     private Label welcomeText;  // 레이블
     @FXML
     private TextField portInputField;  // 포트 입력창
-
     @FXML
     private TextArea messageArea;
+    @FXML
+    private TextField messageInputField;
+
+    public void onSendMessageButtonClick() {
+        String message = messageInputField.getText();
+        if (message != null && !message.isEmpty()) {
+            WebSocketServerEndpoint.broadcastMessage(message);
+            messageArea.appendText("[Server]: " + message + "\n"); // 로컬 표시
+        }
+    }
 
     public void printMessage(String message) {
         messageArea.appendText(message + "\n");

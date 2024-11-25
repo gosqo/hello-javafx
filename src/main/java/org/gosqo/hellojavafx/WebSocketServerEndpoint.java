@@ -7,8 +7,13 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 import javafx.application.Platform;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @ServerEndpoint(value = "/echo", configurator = WebSocketConfigurator.class)  // WebSocket 경로 설정
 public class WebSocketServerEndpoint {
+
+    private static final Set<Session> sessions = new HashSet<>();
 
     private static HelloController controller;
 
@@ -16,9 +21,30 @@ public class WebSocketServerEndpoint {
         controller = helloController;
     }
 
+    public static void broadcastMessage(String message) {
+        synchronized (sessions) {
+            sessions.forEach((session) -> {
+                if (session.isOpen()) {
+                    try {
+                        session.getBasicRemote().sendText(message);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+
     @OnOpen
     public void onOpen(Session session) {
+        sessions.add(session);
         System.out.println("Connected to client: " + session.getId());
+    }
+
+    @OnClose
+    public void onClose(Session session) {
+        sessions.remove(session);
+        System.out.println("Closed connection: " + session.getId());
     }
 
     @OnMessage
@@ -37,10 +63,5 @@ public class WebSocketServerEndpoint {
         }
 
         return "Echo: " + message;  // 받은 메시지 에코
-    }
-
-    @OnClose
-    public void onClose(Session session) {
-        System.out.println("Closed connection: " + session.getId());
     }
 }
