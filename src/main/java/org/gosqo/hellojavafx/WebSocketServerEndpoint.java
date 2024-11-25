@@ -21,20 +21,6 @@ public class WebSocketServerEndpoint {
         controller = helloController;
     }
 
-    public static void broadcastMessage(String message) {
-        synchronized (sessions) {
-            sessions.forEach((session) -> {
-                if (session.isOpen()) {
-                    try {
-                        session.getBasicRemote().sendText(message);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-    }
-
     @OnOpen
     public void onOpen(Session session) {
         sessions.add(session);
@@ -50,18 +36,30 @@ public class WebSocketServerEndpoint {
     @OnMessage
     public String onMessage(String message, Session session) {
         System.out.println("Received message: " + message);
+        String toPrint = String
+                .format("%s: %s"
+                        , session.getUserProperties().get("remoteAddress")
+                        , message
+                );
 
         if (controller != null) {
-            Platform.runLater(() ->
-                    controller.printMessage(String
-                            .format("%s: %s"
-                                    , session.getUserProperties().get("remoteAddress")
-                                    , message
-                            )
-                    )
-            );
+            Platform.runLater(() -> controller.printMessage(toPrint));
         }
 
-        return "Echo: " + message;  // 받은 메시지 에코
+        return toPrint;  // 받은 메시지 에코
+    }
+
+    public static void broadcastMessage(String message) {
+        synchronized (sessions) {
+            sessions.forEach((session) -> {
+                if (session.isOpen()) {
+                    try {
+                        session.getBasicRemote().sendText("Server: " + message);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     }
 }

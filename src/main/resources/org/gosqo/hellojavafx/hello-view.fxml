@@ -9,17 +9,28 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
-    <Label fx:id="welcomeText" text="Enter port and start WebSocket server:"/>
+    <Label fx:id="welcomeText" text="Choose start mode below Server or Client."/>
 
-    <!-- 포트 입력창 추가 -->
-    <TextField fx:id="portInputField" promptText="Enter port" />
+    <!-- 서버/클라이언트 모드 선택 -->
+    <Label text="Select Mode:"/>
+    <VBox spacing="10.0">
+        <RadioButton fx:id="clientModeRadioButton" text="Client Mode" toggleGroup="$modeToggleGroup"/>
+        <RadioButton fx:id="serverModeRadioButton" text="Server Mode" toggleGroup="$modeToggleGroup" selected="true"/>
+    </VBox>
 
-    <!-- 서버 활성화 버튼 추가 -->
-    <Button text="Start WebSocket Server" onAction="#onStartServerButtonClick"/>
+    <!-- 서버 모드에서만 보이는 영역 -->
+    <TextField fx:id="portInputField" promptText="Enter port"/>
+    <Button    fx:id="startServerButton" text="Start WebSocket Server" onAction="#onStartServerButtonClick"/>
 
-    <!-- 클라이언트로부터 받은 메시지를 출력할 새 Label 추가 -->
+    <!-- 클라이언트 모드에서만 보이는 영역 -->
+    <TextField fx:id="serverIpField" promptText="Enter Server IP"/>
+    <TextField fx:id="serverPortField" promptText="Enter Server Port"/>
+    <Button    fx:id="joinServerButton" text="Join Server" onAction="#onJoinServerButtonClick"/>
+
+    <!-- 메시지를 출력할 TextArea -->
     <TextArea fx:id="messageArea" editable="false" wrapText="true" prefRowCount="11" prefColumnCount="30"/>
 
+    <!-- 메시지 입력 및 전송 -->
     <TextField fx:id="messageInputField" promptText="Enter message" />
     <Button text="Send Message" onAction="#onSendMessageButtonClick" />
 </VBox>

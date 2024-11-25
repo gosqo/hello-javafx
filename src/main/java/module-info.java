@@ -16,8 +16,6 @@ module org.gosqo.hellojavafx {
     requires org.glassfish.tyrus.container.grizzly.server;
     requires org.glassfish.tyrus.container.grizzly.client;
 
-
-
     opens org.gosqo.hellojavafx to javafx.fxml;
     exports org.gosqo.hellojavafx;
 }
