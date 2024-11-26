@@ -31,8 +31,7 @@ public class WebSocketClient {
     @OnMessage
     public void onMessage(String message) {
         // 서버로부터 받은 메시지를 JavaFX UI에 표시
-        Platform.runLater(() -> messageArea.appendText(message + "\n")
-        );
+        Platform.runLater(() -> messageArea.appendText(message + "\n"));
     }
 
     @OnClose

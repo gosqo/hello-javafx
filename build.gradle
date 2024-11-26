@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'org.gosqo'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 repositories {
     mavenCentral()
@@ -57,9 +57,20 @@ test {
     useJUnitPlatform()
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.gosqo.hellojavafx.HelloApplication'
+    }
+}
+
 jlink {
     imageZip = project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip")
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+
+    options.addAll([
+            '--add-modules', 'javafx.controls,javafx.fxml'
+    ])
+
     launcher {
         name = 'app'
     }
@@ -68,3 +79,27 @@ jlink {
 jlinkZip {
     group = 'distribution'
 }
+
+// jpackage 설정 추가
+task buildJPackage(type: Exec) {
+    description = 'Create native package using jpackage'
+    group = 'build'
+
+    def osName = System.getProperty("os.name").toLowerCase()
+
+    // 빌드하려는 플랫폼에 맞는 jpackage 명령어 구성
+    def jpackageCommand = [
+            'jpackage',
+            '--name', 'HelloJavaFXApp',
+            '--input', "./build/libs", // 라이브러리 위치
+            '--main-class', 'org.gosqo.hellojavafx.HelloApplication',
+            '--main-jar', 'hello-javafx-1.0-SNAPSHOT.jar', // 애플리케이션 JAR 파일 이름
+            '--type', osName.contains("win") ? 'exe' : osName.contains("mac") ? 'dmg' : 'deb', // 플랫폼에 맞는 패키지 형식
+            '--icon', 'src/main/resources/img/icon.icns', // 애플리케이션 아이콘 (필요시)
+            '--java-options', '--enable-preview' // 필요한 JVM 옵션
+    ]
+
+    commandLine jpackageCommand
+}
+
+build.dependsOn buildJPackage
